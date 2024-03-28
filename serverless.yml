@@ -1,0 +1,70 @@
+service: info-lambda
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: dev
+  region: us-east-1
+  stackName: info-lambda
+  # cfnRole: 'arn:aws:iam::716311313157:role/cf-lambda'
+  # iam:
+  #   deploymentRole: 'arn:aws:iam::716311313157:role/cf-lambda'
+  apiGateway:
+    restApiId: '9v15teq915'
+    restApiRootResourceId: 'jkaswqshsb'
+    description: API gateway
+
+package:
+  individually: true
+  include:
+    - '!*'
+    - '!**'
+    - handler.js
+  
+#    role:
+#      statements:
+#        - Effect: "Allow"
+#          Action:
+#            - "s3:ListBucket"
+#          Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
+#        - Effect: "Allow"
+#          Action:
+#            - "s3:PutObject"
+#          Resource:
+#            Fn::Join:
+#              - ""
+#              - - "arn:aws:s3:::"
+#                - "Ref" : "ServerlessDeploymentBucket"
+#                - "/*"
+
+# you can define service wide environment variables here
+#  environment:
+#    variable1: value1
+
+# you can add packaging information here
+#package:
+#  patterns:
+#    - '!exclude-me.js'
+#    - '!exclude-me-dir/**'
+#    - include-me.js
+#    - include-me-dir/**
+
+
+functions:
+  hello:
+    handler: handler.hello
+    role: arn:aws:iam::716311313157:role/cf-lambda
+    description: info lambda
+    region: 'us-east-1'
+    # package:
+    #   include:
+    #     - node_modules/**
+    #     - ./**
+    events:
+      - http:
+          path: info/{GUID}
+          method: GET
+          cors: true
+
+
